@@ -17,17 +17,19 @@ const (
 
 type TodoItem struct {
 	common.SQLModel
-	Title       string `json:"title" gorm:"column:title;"`
-	Description string `json:"description" gorm:"column:description;"`
-	Status      string `json:"status" gorm:"column:status;"`
+	Title       string        `json:"title" gorm:"column:title;"`
+	Description string        `json:"description" gorm:"column:description;"`
+	Status      string        `json:"status" gorm:"column:status;"`
+	Image       *common.Image `json:"image" gorm:"column:image"`
 }
 
 func (TodoItem) TableName() string { return "todo_items" }
 
 type TodoItemCreation struct {
-	Id          int    `json:"id" gorm:"column:id;"`
-	Title       string `json:"title" gorm:"column:title;"`
-	Description string `json:"description" gorm:"column:description;"`
+	Id          int           `json:"id" gorm:"column:id;"`
+	Title       string        `json:"title" gorm:"column:title;"`
+	Description string        `json:"description" gorm:"column:description;"`
+	Image       *common.Image `json:"image" gorm:"column:image"`
 }
 
 func (i TodoItemCreation) Validate() error {
@@ -42,9 +44,10 @@ func (i TodoItemCreation) Validate() error {
 func (TodoItemCreation) TableName() string { return TodoItem{}.TableName() }
 
 type TodoItemUpdate struct {
-	Title       *string `json:"title" gorm:"column:title;"`
-	Description *string `json:"description" gorm:"column:description;"`
-	Status      *string `json:"status" gorm:"column:status;"`
+	Title       *string       `json:"title" gorm:"column:title;"`
+	Description *string       `json:"description" gorm:"column:description;"`
+	Status      *string       `json:"status" gorm:"column:status;"`
+	Image       *common.Image `json:"image" gorm:"column:image"`
 }
 
 func (TodoItemUpdate) TableName() string { return TodoItem{}.TableName() }

@@ -6,12 +6,17 @@ import (
 	"g09-social-todo-list/module/item/storage"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
+	"log"
 	"net/http"
 	"strconv"
 )
 
 func GetItem(db *gorm.DB) func(ctx *gin.Context) {
 	return func(c *gin.Context) {
+
+		var a []int
+		log.Println(a[0])
+
 		id, err := strconv.Atoi(c.Param("id"))
 
 		if err != nil {
