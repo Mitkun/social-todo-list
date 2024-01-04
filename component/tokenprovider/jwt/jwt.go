@@ -2,9 +2,9 @@ package jwt
 
 import (
 	"fmt"
-	"g09-social-todo-list/common"
-	"g09-social-todo-list/component/tokenprovider"
 	"github.com/dgrijalva/jwt-go"
+	"social-todo-list/common"
+	"social-todo-list/component/tokenprovider"
 	"time"
 )
 

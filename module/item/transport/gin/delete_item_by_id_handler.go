@@ -1,12 +1,12 @@
 package ginitem
 
 import (
-	"g09-social-todo-list/common"
-	"g09-social-todo-list/module/item/biz"
-	"g09-social-todo-list/module/item/storage"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"net/http"
+	"social-todo-list/common"
+	"social-todo-list/module/item/biz"
+	"social-todo-list/module/item/storage"
 	"strconv"
 )
 
@@ -20,8 +20,10 @@ func DeleteItem(db *gorm.DB) func(ctx *gin.Context) {
 			return
 		}
 
+		requester := c.MustGet(common.CurrentUser).(common.Requester)
+
 		store := storage.NewSQLStore(db)
-		business := biz.NewDeleteItemBiz(store)
+		business := biz.NewDeleteItemBiz(store, requester)
 
 		if err := business.DeleteItemById(c.Request.Context(), id); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{

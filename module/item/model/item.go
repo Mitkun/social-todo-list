@@ -2,7 +2,7 @@ package model
 
 import (
 	"errors"
-	"g09-social-todo-list/common"
+	"social-todo-list/common"
 	"strings"
 )
 
@@ -17,16 +17,27 @@ const (
 
 type TodoItem struct {
 	common.SQLModel
-	Title       string        `json:"title" gorm:"column:title;"`
-	Description string        `json:"description" gorm:"column:description;"`
-	Status      string        `json:"status" gorm:"column:status;"`
-	Image       *common.Image `json:"image" gorm:"column:image"`
+	UserId      int                `json:"-" gorm:"column:user_id;"`
+	Title       string             `json:"title" gorm:"column:title;"`
+	Description string             `json:"description" gorm:"column:description;"`
+	Status      string             `json:"status" gorm:"column:status;"`
+	Image       *common.Image      `json:"image" gorm:"column:image"`
+	Owner       *common.SimpleUser `json:"owner" gorm:"foreignKey:UserId;"`
 }
 
 func (TodoItem) TableName() string { return "todo_items" }
 
+func (i *TodoItem) Mask() {
+	i.SQLModel.Mask(common.DbTypeItem)
+
+	if v := i.Owner; v != nil {
+		v.Mask()
+	}
+}
+
 type TodoItemCreation struct {
 	Id          int           `json:"id" gorm:"column:id;"`
+	UserId      int           `json:"-" gorm:"column:user_id;"`
 	Title       string        `json:"title" gorm:"column:title;"`
 	Description string        `json:"description" gorm:"column:description;"`
 	Image       *common.Image `json:"image" gorm:"column:image"`

@@ -2,8 +2,9 @@ package biz
 
 import (
 	"context"
-	"g09-social-todo-list/common"
-	"g09-social-todo-list/module/item/model"
+	"errors"
+	"social-todo-list/common"
+	"social-todo-list/module/item/model"
 )
 
 type DeleteItemStorage interface {
@@ -12,11 +13,12 @@ type DeleteItemStorage interface {
 }
 
 type deleteItemBiz struct {
-	store DeleteItemStorage
+	store     DeleteItemStorage
+	requester common.Requester
 }
 
-func NewDeleteItemBiz(store DeleteItemStorage) *deleteItemBiz {
-	return &deleteItemBiz{store: store}
+func NewDeleteItemBiz(store DeleteItemStorage, requester common.Requester) *deleteItemBiz {
+	return &deleteItemBiz{store: store, requester: requester}
 }
 
 func (biz *deleteItemBiz) DeleteItemById(ctx context.Context, id int) error {
@@ -27,6 +29,11 @@ func (biz *deleteItemBiz) DeleteItemById(ctx context.Context, id int) error {
 
 	if data.Status == "Deleted" {
 		return model.ErrItemIsDeleted
+	}
+
+	isOwner := biz.requester.GetUserId() == data.UserId
+	if !isOwner && !common.IsAdmin(biz.requester) {
+		return common.ErrNoPermission(errors.New("no permission"))
 	}
 
 	if err := biz.store.DeleteItem(ctx, map[string]interface{}{"id": id}); err != nil {

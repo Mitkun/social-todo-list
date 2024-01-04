@@ -2,9 +2,10 @@ package storage
 
 import (
 	"context"
-	"g09-social-todo-list/common"
-	"g09-social-todo-list/module/user/model"
+	"errors"
 	"gorm.io/gorm"
+	"social-todo-list/common"
+	"social-todo-list/module/user/model"
 )
 
 func (s *sqlStore) FindUser(ctx context.Context, conditions map[string]interface{}, moreInfo ...string) (*model.User, error) {
@@ -17,7 +18,7 @@ func (s *sqlStore) FindUser(ctx context.Context, conditions map[string]interface
 	var user model.User
 
 	if err := db.Where(conditions).First(&user).Error; err != nil {
-		if err == gorm.ErrRecordNotFound {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, common.RecordNotFound
 		}
 

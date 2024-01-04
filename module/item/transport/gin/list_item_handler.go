@@ -1,13 +1,13 @@
 package ginitem
 
 import (
-	"g09-social-todo-list/common"
-	"g09-social-todo-list/module/item/biz"
-	"g09-social-todo-list/module/item/model"
-	"g09-social-todo-list/module/item/storage"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"net/http"
+	"social-todo-list/common"
+	"social-todo-list/module/item/biz"
+	"social-todo-list/module/item/model"
+	"social-todo-list/module/item/storage"
 )
 
 func ListItem(db *gorm.DB) func(ctx *gin.Context) {
@@ -26,8 +26,10 @@ func ListItem(db *gorm.DB) func(ctx *gin.Context) {
 
 		queryString.Process()
 
+		requester := c.MustGet(common.CurrentUser).(common.Requester)
+
 		store := storage.NewSQLStore(db)
-		business := biz.NewListItemBiz(store)
+		business := biz.NewListItemBiz(store, requester)
 
 		result, err := business.ListItem(c.Request.Context(), &queryString.Filter, &queryString.Paging)
 		if err != nil {
@@ -35,6 +37,10 @@ func ListItem(db *gorm.DB) func(ctx *gin.Context) {
 				"error": err.Error(),
 			})
 			return
+		}
+
+		for i := range result {
+			result[i].Mask()
 		}
 
 		c.JSON(http.StatusOK, common.NewSuccessResponse(result, queryString.Paging, queryString.Filter))

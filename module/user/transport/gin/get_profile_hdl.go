@@ -1,9 +1,9 @@
 package ginuser
 
 import (
-	"g09-social-todo-list/common"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"social-todo-list/common"
 )
 
 func Profile() gin.HandlerFunc {

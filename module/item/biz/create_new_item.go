@@ -2,8 +2,8 @@ package biz
 
 import (
 	"context"
-	"g09-social-todo-list/common"
-	"g09-social-todo-list/module/item/model"
+	"social-todo-list/common"
+	"social-todo-list/module/item/model"
 )
 
 // Handler -> Biz [-> Repository] -> Storage

@@ -6,6 +6,17 @@ const (
 	CurrentUser = "current_user"
 )
 
+type DbType int
+
+const (
+	DbTypeItem DbType = 1
+	DbTypeUser DbType = 2
+)
+
+const (
+	PluginDBMain = "mysql"
+)
+
 func Recovery() {
 	if r := recover(); r != nil {
 		fmt.Println("Recovered", r)
@@ -23,4 +34,14 @@ func (p TokenPayload) UserId() int {
 
 func (p TokenPayload) Role() string {
 	return p.URole
+}
+
+type Requester interface {
+	GetUserId() int
+	GetEmail() string
+	GetRole() string
+}
+
+func IsAdmin(requester Requester) bool {
+	return requester.GetRole() == "admin" || requester.GetRole() == "mod"
 }

@@ -1,13 +1,13 @@
 package ginitem
 
 import (
-	"g09-social-todo-list/common"
-	"g09-social-todo-list/module/item/biz"
-	"g09-social-todo-list/module/item/storage"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"log"
 	"net/http"
+	"social-todo-list/common"
+	"social-todo-list/module/item/biz"
+	"social-todo-list/module/item/storage"
 	"strconv"
 )
 

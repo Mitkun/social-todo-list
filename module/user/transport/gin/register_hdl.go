@@ -1,13 +1,13 @@
 package ginuser
 
 import (
-	"g09-social-todo-list/common"
-	"g09-social-todo-list/module/user/biz"
-	"g09-social-todo-list/module/user/model"
-	"g09-social-todo-list/module/user/storage"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"net/http"
+	"social-todo-list/common"
+	"social-todo-list/module/user/biz"
+	"social-todo-list/module/user/model"
+	"social-todo-list/module/user/storage"
 )
 
 func Register(db *gorm.DB) func(ctx *gin.Context) {

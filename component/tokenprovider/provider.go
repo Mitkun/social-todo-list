@@ -2,7 +2,7 @@ package tokenprovider
 
 import (
 	"errors"
-	"g09-social-todo-list/common"
+	"social-todo-list/common"
 )
 
 type Provider interface {

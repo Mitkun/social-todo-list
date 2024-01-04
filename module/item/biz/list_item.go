@@ -2,8 +2,8 @@ package biz
 
 import (
 	"context"
-	"g09-social-todo-list/common"
-	"g09-social-todo-list/module/item/model"
+	"social-todo-list/common"
+	"social-todo-list/module/item/model"
 )
 
 type ListItemStorage interface {
@@ -16,11 +16,12 @@ type ListItemStorage interface {
 }
 
 type listItemBiz struct {
-	store ListItemStorage
+	store     ListItemStorage
+	requester common.Requester
 }
 
-func NewListItemBiz(store ListItemStorage) *listItemBiz {
-	return &listItemBiz{store: store}
+func NewListItemBiz(store ListItemStorage, requester common.Requester) *listItemBiz {
+	return &listItemBiz{store: store, requester: requester}
 }
 
 func (biz *listItemBiz) ListItem(
@@ -29,7 +30,9 @@ func (biz *listItemBiz) ListItem(
 	paging *common.Paging,
 	moreKeys ...string,
 ) ([]model.TodoItem, error) {
-	data, err := biz.store.ListItem(ctx, filter, paging)
+	ctxStore := context.WithValue(ctx, common.CurrentUser, biz.requester)
+
+	data, err := biz.store.ListItem(ctxStore, filter, paging, "Owner")
 	if err != nil {
 		return nil, common.ErrCannotListEntity(model.EntityName, err)
 	}

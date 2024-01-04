@@ -2,9 +2,10 @@ package biz
 
 import (
 	"context"
-	"g09-social-todo-list/common"
-	"g09-social-todo-list/component/tokenprovider"
-	"g09-social-todo-list/module/user/model"
+	"fmt"
+	"social-todo-list/common"
+	"social-todo-list/component/tokenprovider"
+	"social-todo-list/module/user/model"
 )
 
 type LoginStorage interface {
@@ -18,7 +19,8 @@ type loginBusiness struct {
 	expiry        int
 }
 
-func NewLoginBusiness(storeUser LoginStorage, tokenProvider tokenprovider.Provider, hasher Hasher, expiry int) *loginBusiness {
+func NewLoginBusiness(storeUser LoginStorage, tokenProvider tokenprovider.Provider,
+	hasher Hasher, expiry int) *loginBusiness {
 	return &loginBusiness{
 		storeUser:     storeUser,
 		tokenProvider: tokenProvider,
@@ -35,11 +37,16 @@ func NewLoginBusiness(storeUser LoginStorage, tokenProvider tokenprovider.Provid
 
 func (business *loginBusiness) Login(ctx context.Context, data *model.UserLogin) (tokenprovider.Token, error) {
 	user, err := business.storeUser.FindUser(ctx, map[string]interface{}{"email": data.Email})
+
 	if err != nil {
 		return nil, model.ErrEmailOrPasswordInvalid
 	}
 
 	passHashed := business.hasher.Hash(data.Password + user.Salt)
+
+	fmt.Println("user.Password", user.Password)
+	fmt.Println("passHashed", passHashed)
+	fmt.Println("data.Password", data.Password)
 
 	if user.Password != passHashed {
 		return nil, model.ErrEmailOrPasswordInvalid

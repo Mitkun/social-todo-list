@@ -2,8 +2,8 @@ package storage
 
 import (
 	"context"
-	"g09-social-todo-list/common"
-	"g09-social-todo-list/module/item/model"
+	"social-todo-list/common"
+	"social-todo-list/module/item/model"
 )
 
 func (s *sqlStore) ListItem(
@@ -16,6 +16,10 @@ func (s *sqlStore) ListItem(
 
 	db := s.db.Where("status <> ?", "Deleted")
 
+	// Get items of requester only
+	//requester := ctx.Value(common.CurrentUser).(common.Requester)
+	//db = db.Where("user_id = ?", requester.GetUserId())
+
 	if f := filter; f != nil {
 		if v := f.Status; v != "" {
 			db = db.Where("status = ?", v)
@@ -24,6 +28,10 @@ func (s *sqlStore) ListItem(
 
 	if err := db.Select("id").Table(model.TodoItem{}.TableName()).Count(&paging.Total).Error; err != nil {
 		return nil, err
+	}
+
+	for i := range moreKeys {
+		db = db.Preload(moreKeys[i])
 	}
 
 	if err := db.Select("*").Order("id desc").

@@ -2,8 +2,8 @@ package storage
 
 import (
 	"context"
-	"g09-social-todo-list/common"
-	"g09-social-todo-list/module/user/model"
+	"social-todo-list/common"
+	"social-todo-list/module/user/model"
 )
 
 func (s *sqlStore) CreateUser(ctx context.Context, data *model.UserCreate) error {

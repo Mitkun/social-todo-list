@@ -4,10 +4,10 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"g09-social-todo-list/common"
-	"g09-social-todo-list/component/tokenprovider"
-	"g09-social-todo-list/module/user/model"
 	"github.com/gin-gonic/gin"
+	"social-todo-list/common"
+	"social-todo-list/component/tokenprovider"
+	"social-todo-list/module/user/model"
 	"strings"
 )
 

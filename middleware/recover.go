@@ -1,8 +1,8 @@
 package middleware
 
 import (
-	"g09-social-todo-list/common"
 	"github.com/gin-gonic/gin"
+	"social-todo-list/common"
 )
 
 func Recover() gin.HandlerFunc {

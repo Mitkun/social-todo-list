@@ -2,10 +2,10 @@ package upload
 
 import (
 	"fmt"
-	"g09-social-todo-list/common"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"net/http"
+	"social-todo-list/common"
 	"time"
 )
 
