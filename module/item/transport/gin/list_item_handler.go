@@ -1,6 +1,7 @@
 package ginitem
 
 import (
+	goservice "github.com/200Lab-Education/go-sdk"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"net/http"
@@ -10,8 +11,10 @@ import (
 	"social-todo-list/module/item/storage"
 )
 
-func ListItem(db *gorm.DB) func(ctx *gin.Context) {
+func ListItem(serviceCtx goservice.ServiceContext) func(*gin.Context) {
 	return func(c *gin.Context) {
+		db := serviceCtx.MustGet(common.PluginDBMain).(*gorm.DB)
+
 		var queryString struct {
 			common.Paging
 			model.Filter
@@ -21,10 +24,11 @@ func ListItem(db *gorm.DB) func(ctx *gin.Context) {
 			c.JSON(http.StatusBadRequest, gin.H{
 				"error": err.Error(),
 			})
+
 			return
 		}
 
-		queryString.Process()
+		queryString.Paging.Process()
 
 		requester := c.MustGet(common.CurrentUser).(common.Requester)
 
@@ -32,10 +36,12 @@ func ListItem(db *gorm.DB) func(ctx *gin.Context) {
 		business := biz.NewListItemBiz(store, requester)
 
 		result, err := business.ListItem(c.Request.Context(), &queryString.Filter, &queryString.Paging)
+
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{
 				"error": err.Error(),
 			})
+
 			return
 		}
 

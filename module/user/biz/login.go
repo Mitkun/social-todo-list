@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 	"social-todo-list/common"
-	"social-todo-list/component/tokenprovider"
 	"social-todo-list/module/user/model"
+	"social-todo-list/plugin/tokenprovider"
 )
 
 type LoginStorage interface {

@@ -2,15 +2,16 @@ package upload
 
 import (
 	"fmt"
+	goservice "github.com/200Lab-Education/go-sdk"
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 	"net/http"
 	"social-todo-list/common"
 	"time"
 )
 
-func Upload(db *gorm.DB) func(ctx *gin.Context) {
+func Upload(serviceCtx goservice.ServiceContext) func(ctx *gin.Context) {
 	return func(c *gin.Context) {
+
 		fileHeader, err := c.FormFile("file")
 
 		if err != nil {

@@ -1,6 +1,7 @@
 package ginitem
 
 import (
+	goservice "github.com/200Lab-Education/go-sdk"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"net/http"
@@ -10,8 +11,10 @@ import (
 	"social-todo-list/module/item/storage"
 )
 
-func CreateItem(db *gorm.DB) func(ctx *gin.Context) {
+func CreateItem(serviceCtx goservice.ServiceContext) func(ctx *gin.Context) {
 	return func(c *gin.Context) {
+		db := serviceCtx.MustGet(common.PluginDBMain).(*gorm.DB)
+
 		var itemData model.TodoItemCreation
 
 		if err := c.ShouldBind(&itemData); err != nil {
@@ -32,6 +35,7 @@ func CreateItem(db *gorm.DB) func(ctx *gin.Context) {
 			c.JSON(http.StatusBadRequest, gin.H{
 				"error": err.Error(),
 			})
+
 			return
 		}
 
