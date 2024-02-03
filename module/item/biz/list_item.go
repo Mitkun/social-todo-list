@@ -6,7 +6,7 @@ import (
 	"social-todo-list/module/item/model"
 )
 
-type ListItemStorage interface {
+type ListItemRepo interface {
 	ListItem(
 		ctx context.Context,
 		filter *model.Filter,
@@ -16,11 +16,11 @@ type ListItemStorage interface {
 }
 
 type listItemBiz struct {
-	store     ListItemStorage
+	store     ListItemRepo
 	requester common.Requester
 }
 
-func NewListItemBiz(store ListItemStorage, requester common.Requester) *listItemBiz {
+func NewListItemBiz(store ListItemRepo, requester common.Requester) *listItemBiz {
 	return &listItemBiz{store: store, requester: requester}
 }
 

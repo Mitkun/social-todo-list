@@ -8,7 +8,9 @@ import (
 	"social-todo-list/common"
 	"social-todo-list/module/item/biz"
 	"social-todo-list/module/item/model"
+	"social-todo-list/module/item/repository"
 	"social-todo-list/module/item/storage"
+	usrLikeStore "social-todo-list/module/userlikeitem/storage"
 )
 
 func ListItem(serviceCtx goservice.ServiceContext) func(*gin.Context) {
@@ -33,7 +35,9 @@ func ListItem(serviceCtx goservice.ServiceContext) func(*gin.Context) {
 		requester := c.MustGet(common.CurrentUser).(common.Requester)
 
 		store := storage.NewSQLStore(db)
-		business := biz.NewListItemBiz(store, requester)
+		likeStore := usrLikeStore.NewSQLStore(db)
+		repo := repository.NewListItemRepo(store, likeStore, requester)
+		business := biz.NewListItemBiz(repo, requester)
 
 		result, err := business.ListItem(c.Request.Context(), &queryString.Filter, &queryString.Paging)
 

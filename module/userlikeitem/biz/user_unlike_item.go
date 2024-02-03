@@ -2,6 +2,7 @@ package biz
 
 import (
 	"context"
+	"log"
 	"social-todo-list/common"
 	"social-todo-list/module/userlikeitem/model"
 )
@@ -11,12 +12,17 @@ type UserULikeItemStoreLikeItemStore interface {
 	Delete(ctx context.Context, userId, itemId int) error
 }
 
-type userUnlikeItemBiz struct {
-	store UserULikeItemStoreLikeItemStore
+type DecreaseLikeCount interface {
+	DecreaseLikeCount(ctx context.Context, id int) error
 }
 
-func NewUserUnlikeItemBiz(store UserULikeItemStoreLikeItemStore) *userUnlikeItemBiz {
-	return &userUnlikeItemBiz{store: store}
+type userUnlikeItemBiz struct {
+	store     UserULikeItemStoreLikeItemStore
+	itemStore DecreaseLikeCount
+}
+
+func NewUserUnlikeItemBiz(store UserULikeItemStoreLikeItemStore, decreaseLike DecreaseLikeCount) *userUnlikeItemBiz {
+	return &userUnlikeItemBiz{store: store, itemStore: decreaseLike}
 }
 
 func (biz *userUnlikeItemBiz) UnlikeItem(ctx context.Context, userId, itemId int) error {
@@ -35,5 +41,13 @@ func (biz *userUnlikeItemBiz) UnlikeItem(ctx context.Context, userId, itemId int
 		return model.ErrCannotUnlikeItem(err)
 	}
 
+	go func() {
+		defer common.Recovery()
+
+		if err := biz.itemStore.DecreaseLikeCount(ctx, itemId); err != nil {
+			log.Println(err)
+		}
+
+	}()
 	return nil
 }
